@@ -1,0 +1,3 @@
+{
+    "mongoURI": "mongodb+srv://matheus:matheus@agendareact-nqphd.mongodb.net/test?retryWrites=true&w=majority"
+}

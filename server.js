@@ -1,8 +1,12 @@
 'use strict'
 
 const express = require('express');
+const connectDB = require('./config/db');
 
 const app = express();
+
+//Conexão com o BD
+connectDB();
 
 app.get('/', (req, res) => res.json({ msg: 'Bem vindo a API da agenda eletrônica...'}));
 
