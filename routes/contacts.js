@@ -10,7 +10,6 @@ router.get('/', (req, res) => {
     res.send('get todos os contatos');
 });
 
-
 // @route   POST api/contacts
 // @desc    Adicionar novo contato
 // @access  Private

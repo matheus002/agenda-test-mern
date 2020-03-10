@@ -8,6 +8,9 @@ const app = express();
 //Conexão com o BD
 connectDB();
 
+//Iniciar Middleware
+app.use(express.json({ extended: false }))
+
 app.get('/', (req, res) => res.json({ msg: 'Bem vindo a API da agenda eletrônica...'}));
 
 //Carregar as rotas
