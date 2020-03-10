@@ -2,19 +2,54 @@
 
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
+const { check, validationResult } = require('express-validator');
+
+const User = require('../models/User');
+const Contact = require('../models/Contacts');
 
 // @route   GET api/contacts
 // @desc    Retorna todos oss contatos do usuário
 // @access  Private
-router.get('/', (req, res) => {
-    res.send('get todos os contatos');
+router.get('/', auth, async (req, res) => {
+   try {
+       const contacts = await Contact.find({ user: req.user.id }).sort({ data: -1 });
+       res.json(contacts);
+   } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+   }
 });
 
 // @route   POST api/contacts
 // @desc    Adicionar novo contato
 // @access  Private
-router.post('/', (req, res) => {
-    res.send('Add contato');
+router.post('/', [auth, [
+    check('name', 'Nome é requerido').notEmpty()
+]], async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, email, phone, type } = req.body;
+
+    try {
+        const newContact = new Contact({
+            name,
+            email,
+            phone,
+            type,
+            user: req.user.id
+        });
+
+        const contact = await newContact.save();
+
+        res.json(contact);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
 });
 
 // @route   PUT api/contacts/:id
